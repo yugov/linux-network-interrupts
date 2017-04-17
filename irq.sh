@@ -1,3 +1,13 @@
+#!/bin/bash
+
+if [ $(cat /sys/module/nf_conntrack/parameters/hashsize) -lt 2500000 ]; then
+        echo 2500000 > /sys/module/nf_conntrack/parameters/hashsize
+fi
+
+if [ $(sysctl -n net.netfilter.nf_conntrack_tcp_loose) -eq 1 ]; then
+        sysctl -w net/netfilter/nf_conntrack_tcp_loose=0
+fi
+
 ncpus=`grep -ciw ^processor /proc/cpuinfo`
 test "$ncpus" -gt 1 || exit 1
 
